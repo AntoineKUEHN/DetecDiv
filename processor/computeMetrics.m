@@ -267,12 +267,15 @@ end
 
   if numel(chabw{1})
    val1=unique(bw1);
-   moyennes1=NaN*ones(length(val1)-1,size(bw1,2),size(bw1,3));
+   moyennes1=NaN*ones(max(1,length(val1)-1),size(bw1,2),size(bw1,3));
+
    sommes1=moyennes1;
    moyenne_brillants1=moyennes1;
    somme_brillants1=moyennes1;
    moyenne_exterieur1=NaN*ones(1,size(bw1,2),size(bw1,3));
 
+   
+   if length(val1)~=1 % there is a mask 
    for i=1:size(bw1,3) % loop on time 
        for k=1:size(bw1,2) % loop on channels
            cc=1;
@@ -293,19 +296,21 @@ end
             end
        end
    end
+   end
    difference1=moyennes1-moyenne_exterieur1;
-  end
+   end
 
 %aa=moyennes1(:,1,1)
 
  if numel(chabw{2})
    val2=unique(bw2);
-   moyennes2=NaN*ones(length(val2),size(bw2,2),size(bw2,3));
+   moyennes2=NaN*ones(max(1,length(val2)-1),size(bw2,2),size(bw2,3));
    sommes2=moyennes2;
    moyenne_brillants2=moyennes2;
    somme_brillants2=moyennes2;
       moyenne_exterieur2=NaN*ones(1,size(bw1,2),size(bw1,3));
 
+   if length(val2)~=1 % there is a mask
    for i=1:size(bw2,3) % loop on time 
        for k=1:size(bw2,2) % loop on channels
            cc=1;
@@ -325,6 +330,7 @@ end
                      end
             end
        end
+   end
    end
    difference2=moyennes2-moyenne_exterieur2;
  end
@@ -381,6 +387,7 @@ end
             defplot=[defplot {false false false false false true}];
           %  end
 
+  
             dat1=[dat1 mean(moyennes1(1,cha,:),2) mean(sommes1(1,cha,:),2) mean(moyenne_brillants1(1,cha,:),2),...
                 mean(somme_brillants1(1,cha,:),2) mean(moyenne_exterieur1(1,cha,:),2) mean(difference1(1,cha,:),2)];
         end
@@ -559,15 +566,16 @@ end
                       bwn=1;
 
                      if numel(chabw{bwn})
-                             ratioMeanNoBckg = squeeze(mean(difference1(:,cha_i,:),2) ./ mean(difference1(:,cha_j,:),2)).';
+                             ratioMeanNoBckg = squeeze(mean(difference1(:,cha_i,:),2) ./ mean(difference1(:,cha_j,:),2));
                              ratioName = ['Ratio_Mean_NoBckg_' channelsName{i} '_' channelsName{j} '_' paramout.(['mask' num2str(bwn) '_label'])];
+                           %  aa=dataout(cc).data
                               dataout(cc).data.(ratioName)=ratioMeanNoBckg;
                      end
 
                       bwn=2;
 
                      if numel(chabw{bwn})
-                             ratioMeanNoBckg = squeeze(mean(difference2(:,cha_i,:),2) ./ mean(difference2(:,cha_j,:),2)).';
+                             ratioMeanNoBckg = squeeze(mean(difference2(:,cha_i,:),2) ./ mean(difference2(:,cha_j,:),2));
                              ratioName = ['Ratio_Mean_NoBckg_' channelsName{i} '_' channelsName{j} '_' paramout.(['mask' num2str(bwn) '_label'])];
                               dataout(cc).data.(ratioName)=ratioMeanNoBckg;
                       end
